@@ -17,6 +17,7 @@ import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.User;
 import com.techacademy.service.EmployeeService;
 import com.techacademy.service.UserDetail;
 
@@ -67,7 +68,8 @@ public class EmployeeController {
          */
         if ("".equals(employee.getPassword())) {
             // パスワードが空白だった場合
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.BLANK_ERROR),
+            model.addAttribute(
+                    ErrorMessage.getErrorName(ErrorKinds.BLANK_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.BLANK_ERROR));
 
             return create(employee);
@@ -85,8 +87,7 @@ public class EmployeeController {
             ErrorKinds result = employeeService.save(employee);
 
             if (ErrorMessage.contains(result)) {
-                model.addAttribute(
-                        ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
                 return create(employee);
             }
 
@@ -123,31 +124,14 @@ public class EmployeeController {
         model.addAttribute("employee", employeeService.findByCode(code));
         return "employees/person";
     }
-    
-    // 従業員 更新画面 氏名空欄チェックで20文字以上入力した場合、値を保持するために処理を分岐
-    public String person2(Model model) {
-        model.addAttribute(model);
-        return "employees/person";
-    }
-    
+
     // 従業員情報 更新実行
     @PostMapping(value = "/{code}/update")
     public String update(
             @PathVariable String code,
             @AuthenticationPrincipal UserDetail userDetail,
             @Validated Employee employee, BindingResult res, Model model) {
-        
-        // 氏名空欄チェック
-        if ( "".equals(employee.getName()) ) {
-            model.addAttribute("nameError", "値を入力してください");
-            model.addAttribute(employee);
-            return person(code, model);
-        } else if ( employee.getName().length() > 20 ) {
-            model.addAttribute("nameError", "20文字以下で入力してください");
-            model.addAttribute(employee);
-            return person2(model);
-        }
-        
+
         ErrorKinds result = employeeService.update(code, userDetail, employee);
 
         if (ErrorMessage.contains(result)) {

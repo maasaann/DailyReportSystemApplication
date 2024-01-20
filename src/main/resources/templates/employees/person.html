@@ -23,8 +23,6 @@
 
         <div class="wizard wizard-success mb-4">
 
-
-
             <div class="mb-3">
                 <label class="form-label" for="code">社員番号</label>
                 <p class="mb-1"></p>
@@ -39,7 +37,7 @@
                 <div class="col-md-7">
                     <input class="form-control" type="text" th:field="*{name}" th:errorclass="err" id="name">
                     <span th:if="${nameError} neq null" th:text="${nameError}" class="text-danger"></span>
-                    <!--<span th:errors="*{name}" class="text-danger"></span>-->
+                    <span th:errors="*{name}" class="text-danger"></span>
                 </div>
             </div>
 
@@ -49,6 +47,7 @@
                 <div class="col-md-7">
                     <input class="form-control" type="password" th:field="*{password}" th:errorclass="err" id="password">
                     <span th:if="${passwordError} neq null" th:text="${passwordError}" class="text-danger"></span>
+                    <span th:errors="*{password}" class="err"></span>
                 </div>
             </div>
 
@@ -62,6 +61,7 @@
                     </select>
                 </div>
             </div>
+
         </div>
 
         <p class="mt-5">

@@ -29,13 +29,31 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // 従業員氏名が空欄かチェックする
+    public boolean isBlankName(Employee employee) {
+        int NameLength = employee.getName().length();
+        return 0 == NameLength;
+    }
+    // 従業員氏名が20文字以下かチェックする
+    public boolean isOutOfRangeName(Employee employee) {
+        int NameLength = employee.getName().length();
+        return 20 < NameLength;
+    }
+    
     // 従業員情報を更新
     @Transactional
     public ErrorKinds update(String code,UserDetail userDetail,Employee employee) {
-
+        
+        // 従業員氏名の 空欄 と 20文字以下 チェック
+        if ( isBlankName(employee) ) {
+            return ErrorKinds.BLANK_ERROR_NAME;
+        } else if ( isOutOfRangeName(employee) ) {
+            return ErrorKinds.RANGECHECK_ERROR_NAME;
+        }
+        
         // 現在の従業員情報を取得
         Employee existingEmployee = findByCode(code);
-
+        
         // 更新後の従業員情報を、現在の従業員情報に上書き
         existingEmployee.setName(employee.getName());
         existingEmployee.setRole(employee.getRole());

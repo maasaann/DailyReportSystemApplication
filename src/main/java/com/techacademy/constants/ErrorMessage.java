@@ -10,11 +10,16 @@ import java.util.Map;
 public class ErrorMessage {
 
     // エラーメッセージ情報マップ
-    private final static Map<ErrorKinds, List<String>> errorMessageMap = new HashMap<ErrorKinds, List<String>>() {
+    private final static Map<ErrorKinds,
+                         List<String>> errorMessageMap = new HashMap<ErrorKinds,
+                         List<String>>() {
         private static final long serialVersionUID = 1L; {
             // 氏名空白チェック用エラーメッセージ
-            put(ErrorKinds.BLANK_ERROR,
+            put(ErrorKinds.BLANK_ERROR_NAME,
                     new ArrayList<String>(Arrays.asList("nameError", "値を入力してください")));
+            // 氏名空白チェック用エラーメッセージ
+            put(ErrorKinds.RANGECHECK_ERROR_NAME,
+                    new ArrayList<String>(Arrays.asList("nameError", "20文字以下で入力してください")));
             // パスワード空白チェック用エラーメッセージ
             put(ErrorKinds.BLANK_ERROR,
                     new ArrayList<String>(Arrays.asList("passwordError", "値を入力してください")));

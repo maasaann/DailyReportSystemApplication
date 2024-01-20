@@ -3,7 +3,8 @@ package com.techacademy.constants;
 // エラーメッセージ定義
 public enum ErrorKinds {
 
-    NOT_FOUND_ERROR,
+    BLANK_ERROR_NAME,
+    RANGECHECK_ERROR_NAME,
     // エラー内容
     // 空白チェックエラー
     BLANK_ERROR,
