@@ -130,11 +130,35 @@ public class EmployeeController {
     public String update(
             @PathVariable String code,
             @AuthenticationPrincipal UserDetail userDetail,
-            @Validated Employee employee, Model model) {
+            @Validated Employee employee, BindingResult res, Model model) {
 
-        @SuppressWarnings("unused")
+        System.out.println(model);
+        
+        // 入力チェック
+        //if (res.hasErrors()) {
+//        if ("".equals(employee.getName())) {
+//            model.addAttribute("nameError", "値を入力してください");
+//            model.addAttribute("employee", employeeService.findByCode(code));
+//            return person(code, model);
+//        }
+
         ErrorKinds result = employeeService.update(code, userDetail, employee);
 
+        System.out.println(ErrorMessage.contains(result));
+
+        if (ErrorMessage.contains(result)) {
+            System.out.println(ErrorMessage.getErrorName(result));
+            System.out.println(ErrorMessage.getErrorValue(result));
+            
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            model.addAttribute("employee", employeeService.findByCode(code));
+            
+            System.out.println(model);
+            
+            return person(code, model);
+        }
+
+        //return "employees/list";
         return "redirect:/employees";
     }
 }

@@ -38,9 +38,27 @@ public class EmployeeService {
 
         // 更新後の従業員情報を、現在の従業員情報に上書き
         existingEmployee.setName(employee.getName());
-        existingEmployee.setPassword(employee.getPassword());
         existingEmployee.setRole(employee.getRole());
 
+        //パスワード処理
+        if ("".equals(employee.getPassword())) {
+            
+            // 空の場合は、現在のパスワードを挿入する
+            existingEmployee.setPassword(existingEmployee.getPassword());
+            
+        } else {
+            // 空ではない 入力ある場合は、チェックしてから挿入する
+            
+            // パスワードチェック
+            ErrorKinds result = employeePasswordCheck(employee);
+            if (ErrorKinds.CHECK_OK != result) {
+                return result;
+            }
+            
+            // ここで挿入
+            existingEmployee.setPassword(employee.getPassword());
+        }
+        
         // 現在の時間を取得してセットする
         LocalDateTime now = LocalDateTime.now();
         existingEmployee.setUpdatedAt(now);

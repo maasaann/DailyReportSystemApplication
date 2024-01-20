@@ -21,7 +21,7 @@
         <form th:action="@{/employees/{code}/update(code=${code})}" th:object="${employee}" th:method="post">
 
         <div class="wizard wizard-success mb-4">
-            
+
             <div class="container">パスワードは変更する場合のみ入力してください</div>
             <hr>
 
@@ -38,7 +38,8 @@
                 <p class="mb-1"></p>
                 <div class="col-md-7">
                     <input class="form-control" type="text" th:field="*{name}" th:errorclass="err" id="name">
-                    <span th:errors="*{name}" class="text-danger"></span>
+                    <span th:if="${nameError} neq null" th:text="${nameError}" class="text-danger"></span>
+                    <!--<span th:errors="*{name}" class="text-danger"></span>-->
                 </div>
             </div>
 
@@ -56,7 +57,7 @@
                 <p class="mb-1"></p>
                 <div class="col-md-4">
                     <select class="form-select" th:field="*{role}" id="role">
-                        <option th:each="item:${T(com.techacademy.entity.Employee.Role).values()}" 
+                        <option th:each="item:${T(com.techacademy.entity.Employee.Role).values()}"
                                 th:value="${item}" th:text="${item.getValue()}" th:selected="*{role} == ${item}">
                     </select>
                 </div>
