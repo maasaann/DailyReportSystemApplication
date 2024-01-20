@@ -132,21 +132,26 @@ public class EmployeeController {
             @AuthenticationPrincipal UserDetail userDetail,
             @Validated Employee employee, BindingResult res, Model model) {
 
-        System.out.println(model);
+        // 氏名空欄チェック
+        if ( "".equals(employee.getName()) ) {
+            model.addAttribute("nameError", "値を入力してください");
+            model.addAttribute(employee);
+            return person(code, model);
+        }
+        // 氏名２０文字以下チェック
+        if (employee.getName().length() > 20) {
+            model.addAttribute("nameError", "20文字以下で入力してください");
+            model.addAttribute(employee);
+            return person(code, model);
+        }
         
-        // 入力チェック
-        //if (res.hasErrors()) {
-//        if ("".equals(employee.getName())) {
-//            model.addAttribute("nameError", "値を入力してください");
-//            model.addAttribute("employee", employeeService.findByCode(code));
-//            return person(code, model);
-//        }
-
+        System.out.println("OK1");
         ErrorKinds result = employeeService.update(code, userDetail, employee);
-
+        System.out.println("OK2");
         System.out.println(ErrorMessage.contains(result));
-
+        System.out.println("OK3");
         if (ErrorMessage.contains(result)) {
+            System.out.println("OK4");
             System.out.println(ErrorMessage.getErrorName(result));
             System.out.println(ErrorMessage.getErrorValue(result));
             
