@@ -124,7 +124,7 @@ public class EmployeeController {
         return "employees/person";
     }
     
-    // 従業員 更新画面 値を保持するために処理を分岐
+    // 従業員 更新画面 氏名空欄チェックで20文字以上入力した場合、値を保持するために処理を分岐
     public String person2(Model model) {
         model.addAttribute(model);
         return "employees/person";
@@ -136,39 +136,25 @@ public class EmployeeController {
             @PathVariable String code,
             @AuthenticationPrincipal UserDetail userDetail,
             @Validated Employee employee, BindingResult res, Model model) {
-
+        
         // 氏名空欄チェック
         if ( "".equals(employee.getName()) ) {
             model.addAttribute("nameError", "値を入力してください");
             model.addAttribute(employee);
-            return person2(model);
-        }
-        // 氏名２０文字以下チェック
-        if ( employee.getName().length() > 20 ) {
+            return person(code, model);
+        } else if ( employee.getName().length() > 20 ) {
             model.addAttribute("nameError", "20文字以下で入力してください");
             model.addAttribute(employee);
             return person2(model);
         }
-
-        System.out.println("OK1");
+        
         ErrorKinds result = employeeService.update(code, userDetail, employee);
-        System.out.println("OK2");
-        System.out.println(ErrorMessage.contains(result));
-        System.out.println("OK3");
-        if (ErrorMessage.contains(result)) {
-            System.out.println("OK4");
-            System.out.println(ErrorMessage.getErrorName(result));
-            System.out.println(ErrorMessage.getErrorValue(result));
 
+        if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
-
-            System.out.println(model);
-
             return person(code, model);
         }
-
-        //return "employees/list";
         return "redirect:/employees";
     }
 }
