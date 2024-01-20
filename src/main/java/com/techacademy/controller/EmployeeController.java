@@ -120,11 +120,16 @@ public class EmployeeController {
     // 従業員 更新画面
     @PostMapping(value = "/{code}/person")
     public String person(@PathVariable String code, Model model) {
-
         model.addAttribute("employee", employeeService.findByCode(code));
         return "employees/person";
     }
-
+    
+    // 従業員 更新画面 値を保持するために処理を分岐
+    public String person2(Model model) {
+        model.addAttribute(model);
+        return "employees/person";
+    }
+    
     // 従業員情報 更新実行
     @PostMapping(value = "/{code}/update")
     public String update(
@@ -136,15 +141,15 @@ public class EmployeeController {
         if ( "".equals(employee.getName()) ) {
             model.addAttribute("nameError", "値を入力してください");
             model.addAttribute(employee);
-            return person(code, model);
+            return person2(model);
         }
         // 氏名２０文字以下チェック
-        if (employee.getName().length() > 20) {
+        if ( employee.getName().length() > 20 ) {
             model.addAttribute("nameError", "20文字以下で入力してください");
             model.addAttribute(employee);
-            return person(code, model);
+            return person2(model);
         }
-        
+
         System.out.println("OK1");
         ErrorKinds result = employeeService.update(code, userDetail, employee);
         System.out.println("OK2");
@@ -154,12 +159,12 @@ public class EmployeeController {
             System.out.println("OK4");
             System.out.println(ErrorMessage.getErrorName(result));
             System.out.println(ErrorMessage.getErrorValue(result));
-            
+
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
-            
+
             System.out.println(model);
-            
+
             return person(code, model);
         }
 
