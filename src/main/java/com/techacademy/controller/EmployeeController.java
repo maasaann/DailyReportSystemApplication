@@ -87,7 +87,9 @@ public class EmployeeController {
             ErrorKinds result = employeeService.save(employee);
 
             if (ErrorMessage.contains(result)) {
-                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                model.addAttribute(
+                        ErrorMessage.getErrorName(result),
+                        ErrorMessage.getErrorValue(result));
                 return create(employee);
             }
 
@@ -110,7 +112,9 @@ public class EmployeeController {
         ErrorKinds result = employeeService.delete(code, userDetail);
 
         if (ErrorMessage.contains(result)) {
-            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            model.addAttribute(
+                    ErrorMessage.getErrorName(result),
+                    ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
             return detail(code, model);
         }
@@ -135,7 +139,9 @@ public class EmployeeController {
         ErrorKinds result = employeeService.update(code, userDetail, employee);
 
         if (ErrorMessage.contains(result)) {
-            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            model.addAttribute(
+                    ErrorMessage.getErrorName(result),
+                    ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
             return person(code, model);
         }
