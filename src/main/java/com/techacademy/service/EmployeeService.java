@@ -39,44 +39,44 @@ public class EmployeeService {
         int NameLength = employee.getName().length();
         return 20 < NameLength;
     }
-    
+
     // 従業員情報を更新
     @Transactional
     public ErrorKinds update(String code,UserDetail userDetail,Employee employee) {
-        
+
         // 従業員氏名の 空欄 と 20文字以下 チェック
         if ( isBlankName(employee) ) {
             return ErrorKinds.BLANK_ERROR_NAME;
         } else if ( isOutOfRangeName(employee) ) {
             return ErrorKinds.RANGECHECK_ERROR_NAME;
         }
-        
+
         // 現在の従業員情報を取得
         Employee existingEmployee = findByCode(code);
-        
+
         // 更新後の従業員情報を、現在の従業員情報に上書き
         existingEmployee.setName(employee.getName());
         existingEmployee.setRole(employee.getRole());
 
         //パスワード処理
         if ("".equals(employee.getPassword())) {
-            
+
             // 空の場合は、現在のパスワードを挿入する
             existingEmployee.setPassword(existingEmployee.getPassword());
-            
+
         } else {
             // 空ではない 入力ある場合は、チェックしてから挿入する
-            
+
             // パスワードチェック
             ErrorKinds result = employeePasswordCheck(employee);
             if (ErrorKinds.CHECK_OK != result) {
                 return result;
             }
-            
+
             // ここで挿入
             existingEmployee.setPassword(employee.getPassword());
         }
-        
+
         // 現在の時間を取得してセットする
         LocalDateTime now = LocalDateTime.now();
         existingEmployee.setUpdatedAt(now);

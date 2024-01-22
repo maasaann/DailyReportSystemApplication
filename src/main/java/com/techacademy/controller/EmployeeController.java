@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
-
 import com.techacademy.entity.Employee;
-import com.techacademy.entity.User;
 import com.techacademy.service.EmployeeService;
 import com.techacademy.service.UserDetail;
 
@@ -32,7 +30,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    // 従業員一覧画面
+    // 従業員 一覧画面
     @GetMapping
     public String list(Model model) {
 
@@ -42,7 +40,7 @@ public class EmployeeController {
         return "employees/list";
     }
 
-    // 従業員詳細画面
+    // 従業員 詳細画面
     @GetMapping(value = "/{code}/")
     public String detail(@PathVariable String code, Model model) {
 
@@ -50,14 +48,14 @@ public class EmployeeController {
         return "employees/detail";
     }
 
-    // 従業員新規登録画面
+    // 従業員 新規登録画面
     @GetMapping(value = "/add")
     public String create(@ModelAttribute Employee employee) {
 
         return "employees/new";
     }
 
-    // 従業員新規登録処理
+    // 従業員 新規登録処理
     @PostMapping(value = "/add")
     public String add(@Validated Employee employee, BindingResult res, Model model) {
 
@@ -103,7 +101,7 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
-    // 従業員削除処理
+    // 従業員 削除処理
     @PostMapping(value = "/{code}/delete")
     public String delete(
             @PathVariable String code,
@@ -123,13 +121,13 @@ public class EmployeeController {
     }
 
     // 従業員 更新画面
-    @PostMapping(value = "/{code}/person")
-    public String person(@PathVariable String code, Model model) {
+    @PostMapping(value = "/{code}/renew")
+    public String renew(@PathVariable String code, Model model) {
         model.addAttribute("employee", employeeService.findByCode(code));
-        return "employees/person";
+        return "employees/renew";
     }
 
-    // 従業員情報 更新実行
+    // 従業員 情報更新実行
     @PostMapping(value = "/{code}/update")
     public String update(
             @PathVariable String code,
@@ -143,7 +141,7 @@ public class EmployeeController {
                     ErrorMessage.getErrorName(result),
                     ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
-            return person(code, model);
+            return renew(code, model);
         }
         return "redirect:/employees";
     }

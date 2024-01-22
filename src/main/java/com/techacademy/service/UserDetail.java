@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Employee.Role;
+import com.techacademy.entity.Report;
 
 public class UserDetail implements UserDetails {
     private static final long serialVersionUID = 1L;
@@ -69,6 +70,11 @@ public class UserDetail implements UserDetails {
     }
 
     public Role getRole() {
+        // TODO 自動生成されたメソッド・スタブ
+        return null;
+    }
+
+    public Report getReport() {
         // TODO 自動生成されたメソッド・スタブ
         return null;
     }
