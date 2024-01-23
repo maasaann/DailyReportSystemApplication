@@ -10,8 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -48,7 +46,7 @@ public class Report {
     @Column(length = 10)
     @NotEmpty
     @Length(max = 10)
-    private String employee_code;
+    private String employeeCode;
 
     // 削除フラグ(論理削除を行うため)
     @Column(columnDefinition="TINYINT", nullable = false)

@@ -25,24 +25,32 @@ public class EmployeeService {
     public EmployeeService(
             EmployeeRepository employeeRepository,
             PasswordEncoder passwordEncoder) {
+        
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // 従業員氏名が空欄かチェックする
-    public boolean isBlankName(Employee employee) {
-        int NameLength = employee.getName().length();
-        return 0 == NameLength;
+    // 従業員一覧表示処理
+    public List<Employee> findAll() {
+        
+        return employeeRepository.findAll();
     }
-    // 従業員氏名が20文字以下かチェックする
-    public boolean isOutOfRangeName(Employee employee) {
-        int NameLength = employee.getName().length();
-        return 20 < NameLength;
+
+    // 1件を検索
+    public Employee findByCode(String code) {
+        
+        // findByIdで検索
+        Optional<Employee> option = employeeRepository.findById(code);
+        // 取得できなかった場合はnullを返す
+        Employee employee = option.orElse(null);
+        
+        return employee;
     }
 
     // 従業員情報を更新
     @Transactional
-    public ErrorKinds update(String code,UserDetail userDetail,Employee employee) {
+    public ErrorKinds update(
+            String code,UserDetail userDetail,Employee employee) {
 
         // 従業員氏名の 空欄 と 20文字以下 チェック
         if ( isBlankName(employee) ) {
@@ -109,6 +117,7 @@ public class EmployeeService {
         employee.setUpdatedAt(now);
 
         employeeRepository.save(employee);
+        
         return ErrorKinds.SUCCESS;
     }
 
@@ -128,32 +137,27 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
-    // 従業員一覧表示処理
-    public List<Employee> findAll() {
-        return employeeRepository.findAll();
+    // （チェック）従業員氏名が空欄か
+    public boolean isBlankName(Employee employee) {
+        int NameLength = employee.getName().length();
+        return 0 == NameLength;
+    }
+    // （チェック）従業員氏名が20文字以下か
+    public boolean isOutOfRangeName(Employee employee) {
+        int NameLength = employee.getName().length();
+        return 20 < NameLength;
     }
 
-    // 1件を検索
-    public Employee findByCode(String code) {
-        // findByIdで検索
-        Optional<Employee> option = employeeRepository.findById(code);
-        // 取得できなかった場合はnullを返す
-        Employee employee = option.orElse(null);
-        return employee;
-    }
-
-    // 従業員パスワードチェック
+    // （チェック）従業員パスワード
     private ErrorKinds employeePasswordCheck(Employee employee) {
 
         // 従業員パスワードの半角英数字チェック処理
         if (isHalfSizeCheckError(employee)) {
-
             return ErrorKinds.HALFSIZE_ERROR;
         }
 
         // 従業員パスワードの8文字～16文字チェック処理
         if (isOutOfRangePassword(employee)) {
-
             return ErrorKinds.RANGECHECK_ERROR;
         }
 
@@ -162,20 +166,21 @@ public class EmployeeService {
         return ErrorKinds.CHECK_OK;
     }
 
-    // 従業員パスワードの半角英数字チェック処理
+    // （チェック）（チェック）従業員パスワードの半角英数字チェック処理
     private boolean isHalfSizeCheckError(Employee employee) {
 
         // 半角英数字チェック
         Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
         Matcher matcher = pattern.matcher(employee.getPassword());
+        
         return !matcher.matches();
     }
-
-    // 従業員パスワードの8文字～16文字チェック処理
+    // （チェック）（チェック）従業員パスワードの8文字～16文字チェック処理
     public boolean isOutOfRangePassword(Employee employee) {
 
         // 桁数チェック
         int passwordLength = employee.getPassword().length();
+        
         return passwordLength < 8 || 16 < passwordLength;
     }
 

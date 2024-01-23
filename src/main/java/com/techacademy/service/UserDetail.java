@@ -78,4 +78,9 @@ public class UserDetail implements UserDetails {
         // TODO 自動生成されたメソッド・スタブ
         return null;
     }
+
+    public char[] getEmployeeCode() {
+        // TODO 自動生成されたメソッド・スタブ
+        return null;
+    }
 }
