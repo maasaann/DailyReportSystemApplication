@@ -27,7 +27,7 @@ public class EmployeeController {
 
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
-        
+
         this.employeeService = employeeService;
     }
 
@@ -46,14 +46,13 @@ public class EmployeeController {
     public String detail(@PathVariable String code, Model model) {
 
         model.addAttribute("employee", employeeService.findByCode(code));
-        
+
         return "employees/detail";
     }
 
     // 従業員 新規登録画面
     @GetMapping(value = "/add")
     public String create(@ModelAttribute Employee employee) {
-
         return "employees/new";
     }
 
@@ -74,7 +73,6 @@ public class EmployeeController {
                     ErrorMessage.getErrorValue(ErrorKinds.BLANK_ERROR));
 
             return create(employee);
-
         }
 
         // 入力チェック
@@ -84,24 +82,23 @@ public class EmployeeController {
 
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
-        try {
-            ErrorKinds result = employeeService.save(employee);
+        try { ErrorKinds result = employeeService.save(employee);
 
             if (ErrorMessage.contains(result)) {
-                
+
                 model.addAttribute(
                         ErrorMessage.getErrorName(result),
                         ErrorMessage.getErrorValue(result));
-                
+
                 return create(employee);
             }
 
         } catch (DataIntegrityViolationException e) {
-            
+
             model.addAttribute(
             ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
             ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            
+
             return create(employee);
         }
 
@@ -117,12 +114,12 @@ public class EmployeeController {
         ErrorKinds result = employeeService.delete(code, userDetail);
 
         if (ErrorMessage.contains(result)) {
-            
+
             model.addAttribute(
                     ErrorMessage.getErrorName(result),
                     ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
-            
+
             return detail(code, model);
         }
 
@@ -132,9 +129,9 @@ public class EmployeeController {
     // 従業員 更新画面
     @PostMapping(value = "/{code}/renew")
     public String renew(@PathVariable String code, Model model) {
-        
+
         model.addAttribute("employee", employeeService.findByCode(code));
-        
+
         return "employees/renew";
     }
 
@@ -148,15 +145,15 @@ public class EmployeeController {
         ErrorKinds result = employeeService.update(code, userDetail, employee);
 
         if (ErrorMessage.contains(result)) {
-            
+
             model.addAttribute(
                     ErrorMessage.getErrorName(result),
                     ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
-            
+
             return renew(code, model);
         }
-        
+
         return "redirect:/employees";
     }
 }

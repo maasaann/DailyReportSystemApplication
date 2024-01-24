@@ -51,7 +51,7 @@ public class EmployeeService {
     @Transactional
     public ErrorKinds update(
             String code,UserDetail userDetail,Employee employee) {
-
+        
         // 従業員氏名の 空欄 と 20文字以下 チェック
         if ( isBlankName(employee) ) {
             return ErrorKinds.BLANK_ERROR_NAME;
@@ -61,7 +61,7 @@ public class EmployeeService {
 
         // 現在の従業員情報を取得
         Employee existingEmployee = findByCode(code);
-
+        
         // 更新後の従業員情報を、現在の従業員情報に上書き
         existingEmployee.setName(employee.getName());
         existingEmployee.setRole(employee.getRole());
@@ -115,7 +115,7 @@ public class EmployeeService {
         LocalDateTime now = LocalDateTime.now();
         employee.setCreatedAt(now);
         employee.setUpdatedAt(now);
-
+        
         employeeRepository.save(employee);
         
         return ErrorKinds.SUCCESS;

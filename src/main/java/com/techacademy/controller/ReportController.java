@@ -44,11 +44,19 @@ public class ReportController {
 
     // 日報 詳細画面
     @GetMapping(value = "/{employeeCode}/")
-    public String detail(@PathVariable String employeeCode, 
+    public String detail(
+            @PathVariable String employeeCode, 
             @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
         model.addAttribute("report", reportService.findByCode(employeeCode));
+        
+        System.out.println("11111111111");
+        System.out.println(model);
+        
         model.addAttribute("name", userDetail.getEmployee().getName());
+        
+        System.out.println("22222222222");
+        System.out.println(model);
         
         return "reports/r-detail";
     }
