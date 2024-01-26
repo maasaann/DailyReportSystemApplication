@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.ReportRepository;
 
@@ -17,7 +18,7 @@ import com.techacademy.repository.ReportRepository;
 public class ReportService {
 
     private final ReportRepository reportRepository;
-    
+
     @Autowired
     public ReportService(ReportRepository reportRepository) {
         this.reportRepository = reportRepository;
@@ -29,23 +30,22 @@ public class ReportService {
     }
 
     // 1件を検索
-    public Report findByCode(String employeeCode) {
-        
+    public Report findByCode(String id) {
+
         // findByIdで検索
-        Optional<Report> option = reportRepository.findById(employeeCode);
+        Optional<Report> option = reportRepository.findById(id);
         // 取得できなかった場合はnullを返す
         Report report = option.orElse(null);
-        
+
         return report;
     }
 
-    // 日報情報を更新
+    // 日報 情報を更新
     @Transactional
-    public ErrorKinds r_update(
-            String employeeCode,UserDetail userDetail,Report report) {
+    public ErrorKinds r_update(String id,Report report) {
 
         // 現在の日報情報を取得
-        Report existingReport = findByCode(employeeCode);
+        Report existingReport = findByCode(id);
 
         // 更新後の日報情報を、現在の日報情報に上書き
         existingReport.setTitle(report.getTitle());
@@ -61,9 +61,9 @@ public class ReportService {
         return ErrorKinds.SUCCESS;
     }
 
-    // 従業員保存
+    // 日報 保存
     @Transactional
-    public ErrorKinds save(Report report, UserDetail userDetail) {
+    public ErrorKinds save(Report report) {
 
         report.setDeleteFlg(false);
 
@@ -74,11 +74,21 @@ public class ReportService {
         report.setCreatedAt(now);
         report.setUpdatedAt(now);
 
-        report.setEmployeeCode(userDetail.getEmployee().getCode());
-
         reportRepository.save(report);
-
+        
         return ErrorKinds.SUCCESS;
     }
 
+    // 日報 削除
+    @Transactional
+    public ErrorKinds delete(String id) {
+
+        Report report = findByCode(id);
+        
+        LocalDateTime now = LocalDateTime.now();
+        report.setUpdatedAt(now);
+        report.setDeleteFlg(true);
+
+        return ErrorKinds.SUCCESS;
+    }
 }

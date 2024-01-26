@@ -27,7 +27,6 @@ public class EmployeeController {
 
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
-
         this.employeeService = employeeService;
     }
 
@@ -53,6 +52,7 @@ public class EmployeeController {
     // 従業員 新規登録画面
     @GetMapping(value = "/add")
     public String create(@ModelAttribute Employee employee) {
+        
         return "employees/new";
     }
 

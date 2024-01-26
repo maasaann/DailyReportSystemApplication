@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
+import com.techacademy.service.EmployeeService;
 import com.techacademy.service.ReportService;
 import com.techacademy.service.UserDetail;
 
@@ -23,102 +25,125 @@ import com.techacademy.service.UserDetail;
 public class ReportController {
 
     private final ReportService reportService;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public ReportController(ReportService reportService) {
+    public ReportController(
+            ReportService reportService,
+            EmployeeService employeeService) {
         this.reportService = reportService;
+        this.employeeService = employeeService;
     }
 
     // 日報 一覧画面
     @GetMapping
-    public String list(
-            @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String list(Model model) {
 
         model.addAttribute("listSize", reportService.findAll().size());
         model.addAttribute("reportList", reportService.findAll());
-        // 名前取得
-        model.addAttribute("name", userDetail.getEmployee().getName());
 
         return "reports/r-list";
     }
 
     // 日報 詳細画面
-    @GetMapping(value = "/{employeeCode}/")
-    public String detail(
-            @PathVariable String employeeCode, 
-            @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    @GetMapping(value = "/{id}/")
+    public String detail(@PathVariable String id,Model model) {
 
-        model.addAttribute("report", reportService.findByCode(employeeCode));
-        
-        System.out.println("11111111111");
-        System.out.println(model);
-        
-        model.addAttribute("name", userDetail.getEmployee().getName());
-        
-        System.out.println("22222222222");
-        System.out.println(model);
-        
+        model.addAttribute("report", reportService.findByCode(id));
+
         return "reports/r-detail";
     }
 
     // 日報 新規登録画面
     @GetMapping(value = "/r-add")
-    public String r_create(@ModelAttribute Report report,
-            @AuthenticationPrincipal UserDetail userDetail, Model model) {
-        
+    public String r_create(
+            @ModelAttribute Report report,
+            @AuthenticationPrincipal UserDetail userDetail,Model model) {
+
         model.addAttribute("name", userDetail.getEmployee().getName());
-        
+
         return "reports/r-new";
     }
 
     // 日報 新規登録処理
     @PostMapping(value = "/r-add")
     public String add(
+            @ModelAttribute Report report,
             @AuthenticationPrincipal UserDetail userDetail,
-            @Validated Report report, BindingResult res, Model model) {
+            BindingResult res, Model model) {
 
-        ErrorKinds result = reportService.save(report, userDetail);
+        String EmpCode = userDetail.getEmployee().getCode();
+        Employee employee = employeeService.findByCode(EmpCode);
+        report.setEmployee(employee);
+
+        Integer ReportCounts = reportService.findAll().size() + 1;
+        report.setId(ReportCounts);
+
+        ErrorKinds result = reportService.save(report);
+
+//        // 入力チェック
+//        if (res.hasErrors()) {
+//            return r_create(report,userDetail,model);
+//        }
 
         if (ErrorMessage.contains(result)) {
-            
+
             model.addAttribute(
                     ErrorMessage.getErrorName(result),
                     ErrorMessage.getErrorValue(result));
-            
-            return r_create(report, null, null);
+
+            return r_create(report,userDetail,model);
+        }
+
+        return "redirect:/reports";
+    }
+
+    // 日報 削除処理
+    @PostMapping(value = "/{id}/delete")
+    public String delete(
+            @PathVariable String id,
+            @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
+        ErrorKinds result = reportService.delete(id);
+
+        if (ErrorMessage.contains(result)) {
+
+            model.addAttribute(
+                    ErrorMessage.getErrorName(result),
+                    ErrorMessage.getErrorValue(result));
+            model.addAttribute("report", reportService.findByCode(id));
+
+            return detail(id,model);
         }
 
         return "redirect:/reports";
     }
 
     // 日報 更新画面
-    @PostMapping(value = "/{employeeCode}/r-renew")
-    public String r_renew(@PathVariable String employeeCode,
-            @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    @PostMapping(value = "/{id}/r-renew")
+    public String r_renew(@PathVariable String id, Model model) {
 
-        model.addAttribute("report", reportService.findByCode(employeeCode));
-        model.addAttribute("name", userDetail.getEmployee().getName());
-        
+        model.addAttribute("report", reportService.findByCode(id));
+
         return "reports/r-renew";
     }
 
     // 日報 情報更新実行
-    @PostMapping(value = "/{employeeCode}/r-update")
+    @PostMapping(value = "/{id}/r-update")
     public String r_update(
-            @PathVariable String employeeCode,
-            @AuthenticationPrincipal UserDetail userDetail,
+            @PathVariable String id,
             @Validated Report report, BindingResult res, Model model) {
 
-        ErrorKinds result = reportService.r_update(employeeCode, userDetail, report);
+        ErrorKinds result = reportService.r_update(id, report);
 
         if (ErrorMessage.contains(result)) {
-            
+
             model.addAttribute(
                     ErrorMessage.getErrorName(result),
                     ErrorMessage.getErrorValue(result));
-            model.addAttribute("report", reportService.findByCode(employeeCode));
-            
-            return r_renew(employeeCode, null, model);
+            model.addAttribute("report", reportService.findByCode(id));
+
+            return r_renew(id, model);
         }
 
         return "redirect:/reports";

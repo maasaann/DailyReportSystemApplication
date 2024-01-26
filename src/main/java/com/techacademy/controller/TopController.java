@@ -13,20 +13,9 @@ public class TopController {
         return "login/login";
     }
 
-//    // ログイン後のトップページ表示
-//    @GetMapping(value = "/")
-//    public String top() {
-//        return "redirect:/employees";
-//    }
-
     // ログイン後のトップページ表示
     @GetMapping(value = "/")
     public String top(Model model) {
-
-        // 修正前は、従業員一覧画面に当たる「/employees」にリダイレクト
-        // return "redirect:/employees";
-
-        // 修正後は、日報一覧画面に当たる「/reports」にリダイレクト
         return "redirect:/reports";
     }
 }

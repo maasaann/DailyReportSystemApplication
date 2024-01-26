@@ -13,16 +13,19 @@ import com.techacademy.entity.Employee.Role;
 import com.techacademy.entity.Report;
 
 public class UserDetail implements UserDetails {
+    
     private static final long serialVersionUID = 1L;
 
     private final Employee employee;
     private final List<SimpleGrantedAuthority> authorities;
 
     public UserDetail(Employee employee) {
+        
         this.employee = employee;
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority(employee.getRole().toString())); // 従業員の権限を追加
+        authorities.add(new SimpleGrantedAuthority(employee.getRole().toString()));
+        
         this.authorities = authorities;
     }
 
@@ -75,11 +78,6 @@ public class UserDetail implements UserDetails {
     }
 
     public Report getReport() {
-        // TODO 自動生成されたメソッド・スタブ
-        return null;
-    }
-
-    public char[] getEmployeeCode() {
         // TODO 自動生成されたメソッド・スタブ
         return null;
     }

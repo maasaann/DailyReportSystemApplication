@@ -18,7 +18,7 @@
     <div class="col-xl-12">
     <div class="card">
     <div class="card-body">
-        <form th:action="@{/reports/{employeeCode}/r-update(employeeCode=${report.employeeCode})}"
+        <form th:action="@{/reports/{id}/r-update(id=${report.id})}"
               th:object="${report}"
               th:method="post">
 
@@ -37,7 +37,7 @@
                 <label class="form-label" for="name">氏名</label>
                 <p class="mb-1"></p>
                 <div class="col-md-7">
-                    <p th:text="${name}"></p>
+                    <p th:text="${report.employee.name}"></p>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
 
         <p class="mt-5">
             <input type="submit" value="更新" class="btn btn-primary">
-            <a th:href="@{/reports/{employeeCode}/(employeeCode=${report.employeeCode})}" class="btn btn-primary">戻る</a>
+            <a th:href="@{/reports/{id}/(id=${report.id})}" class="btn btn-primary">戻る</a>
         </p>
         </form>
     </div>

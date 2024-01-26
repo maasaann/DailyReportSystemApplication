@@ -10,9 +10,8 @@ import java.util.Map;
 public class ErrorMessage {
 
     // エラーメッセージ情報マップ
-    private final static Map<ErrorKinds,
-                         List<String>> errorMessageMap = new HashMap<ErrorKinds,
-                         List<String>>() {
+    private final static Map<ErrorKinds,List<String>> errorMessageMap = new HashMap<ErrorKinds,List<String>>() {
+
         private static final long serialVersionUID = 1L; {
             // 氏名空白チェック用エラーメッセージ
             put(ErrorKinds.BLANK_ERROR_NAME,

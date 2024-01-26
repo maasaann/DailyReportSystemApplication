@@ -25,25 +25,24 @@ public class EmployeeService {
     public EmployeeService(
             EmployeeRepository employeeRepository,
             PasswordEncoder passwordEncoder) {
-        
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     // 従業員一覧表示処理
     public List<Employee> findAll() {
-        
+
         return employeeRepository.findAll();
     }
 
     // 1件を検索
     public Employee findByCode(String code) {
-        
+
         // findByIdで検索
         Optional<Employee> option = employeeRepository.findById(code);
         // 取得できなかった場合はnullを返す
         Employee employee = option.orElse(null);
-        
+
         return employee;
     }
 
@@ -51,7 +50,7 @@ public class EmployeeService {
     @Transactional
     public ErrorKinds update(
             String code,UserDetail userDetail,Employee employee) {
-        
+
         // 従業員氏名の 空欄 と 20文字以下 チェック
         if ( isBlankName(employee) ) {
             return ErrorKinds.BLANK_ERROR_NAME;
@@ -61,7 +60,7 @@ public class EmployeeService {
 
         // 現在の従業員情報を取得
         Employee existingEmployee = findByCode(code);
-        
+
         // 更新後の従業員情報を、現在の従業員情報に上書き
         existingEmployee.setName(employee.getName());
         existingEmployee.setRole(employee.getRole());
@@ -115,9 +114,9 @@ public class EmployeeService {
         LocalDateTime now = LocalDateTime.now();
         employee.setCreatedAt(now);
         employee.setUpdatedAt(now);
-        
+
         employeeRepository.save(employee);
-        
+
         return ErrorKinds.SUCCESS;
     }
 
@@ -130,6 +129,7 @@ public class EmployeeService {
             return ErrorKinds.LOGINCHECK_ERROR;
         }
         Employee employee = findByCode(code);
+        
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
         employee.setDeleteFlg(true);
@@ -172,7 +172,7 @@ public class EmployeeService {
         // 半角英数字チェック
         Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
         Matcher matcher = pattern.matcher(employee.getPassword());
-        
+
         return !matcher.matches();
     }
     // （チェック）（チェック）従業員パスワードの8文字～16文字チェック処理
@@ -180,7 +180,7 @@ public class EmployeeService {
 
         // 桁数チェック
         int passwordLength = employee.getPassword().length();
-        
+
         return passwordLength < 8 || 16 < passwordLength;
     }
 
