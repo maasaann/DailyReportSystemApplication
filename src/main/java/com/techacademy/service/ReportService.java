@@ -82,7 +82,7 @@ public class ReportService {
     // 日報 削除
     @Transactional
     public ErrorKinds delete(String id) {
-
+ 
         Report report = findByCode(id);
         
         LocalDateTime now = LocalDateTime.now();
