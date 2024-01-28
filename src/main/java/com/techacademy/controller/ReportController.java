@@ -71,7 +71,7 @@ public class ReportController {
             @ModelAttribute Report report,
             @AuthenticationPrincipal UserDetail userDetail,
             BindingResult res, Model model) {
-
+        
         // employeeCode を取得
         String EmpCode = userDetail.getEmployee().getCode();
         // Employee を EmpCode でインスタンス化
@@ -83,9 +83,9 @@ public class ReportController {
         Integer ReportCounts = reportService.findAll().size() + 1;
         // setId
         report.setId(ReportCounts);
-        
+
         // save
-        ErrorKinds result = reportService.save(report);
+        ErrorKinds result = reportService.save(report,employee);
 
         if (ErrorMessage.contains(result)) {
 

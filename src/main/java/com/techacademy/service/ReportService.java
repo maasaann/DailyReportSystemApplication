@@ -1,9 +1,7 @@
 package com.techacademy.service;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
-import com.techacademy.repository.EmployeeRepository;
 import com.techacademy.repository.ReportRepository;
 
 @Service
@@ -69,13 +67,12 @@ public class ReportService {
 
     // 日報 保存
     @Transactional
-    public ErrorKinds save(Report report) {
+    public ErrorKinds save(Report report,Employee employee) {
 
         // 日報 日付 の 空欄 と 重複 チェック
         if ( isBlankReportDate(report) ) {
             return ErrorKinds.DATECHECK_BLANK_ERROR;
-        } else if ( isDuplicateReportDate(report) ) {
-            System.out.println("111");
+        } else if ( isDuplicateReportDate(report,employee) ) {
             return ErrorKinds.DATECHECK_ERROR;
         }
 
@@ -95,9 +92,6 @@ public class ReportService {
 
         report.setDeleteFlg(false);
 
-        LocalDate now_yyyymmdd = LocalDate.now();
-        report.setReportDate(now_yyyymmdd);
-
         LocalDateTime now = LocalDateTime.now();
         report.setCreatedAt(now);
         report.setUpdatedAt(now);
@@ -112,32 +106,17 @@ public class ReportService {
         LocalDate RD = report.getReportDate();
         return null == RD;
     }
-
+    
     // （チェック）日報 日付が重複か
-    public boolean isDuplicateReportDate(Report report) {
+    public boolean isDuplicateReportDate(Report report,Employee employee) {
 
-        System.out.println("000");
-        
         // 日付
-        LocalDate rd = report.getReportDate();
-        java.sql.Date date = java.sql.Date.valueOf(rd);
+        LocalDate Date = report.getReportDate();
 
-        System.out.println("111");
-        System.out.println(date);
-
-        // employeeCode
-        String empCode = report.getEmployee().getCode();
-
-        System.out.println("222");
-        System.out.println(empCode);
-        
         // findByIdで検索
-        Optional<Report> option = reportRepository.findByReportDateAndEmployeeCode(date,empCode);
+        Optional<Report> option = reportRepository.findByReportDateAndEmployee(Date,employee);
         // 取得できなかった場合はnullを返す
         Report report1 = option.orElse(null);
-
-        System.out.println("333");
-        System.out.println(report1);
 
         return null != report1;
     }
