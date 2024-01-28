@@ -13,6 +13,7 @@ public class SecurityConfig {
     /** 認証・認可設定 */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.formLogin(login -> login.loginProcessingUrl("/login") // 従業員番号・パスワードの送信先
                 .loginPage("/login") // ログイン画面
                 .defaultSuccessUrl("/") // ログイン成功後のリダイレクト先

@@ -2,7 +2,12 @@ package com.techacademy.constants;
 
 // エラーメッセージ定義
 public enum ErrorKinds {
-
+    
+    BLANK_ERROR_TITLE,
+    RANGECHECK_ERROR_TITLE,
+    BLANK_ERROR_CONTENT,
+    RANGECHECK_ERROR_CONTENT,
+    DATECHECK_BLANK_ERROR,
     BLANK_ERROR_NAME,
     RANGECHECK_ERROR_NAME,
     // エラー内容

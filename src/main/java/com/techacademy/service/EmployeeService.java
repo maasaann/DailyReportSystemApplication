@@ -120,6 +120,17 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
+    // （チェック）従業員氏名が空欄か
+    public boolean isBlankName(Employee employee) {
+        int NameLength = employee.getName().length();
+        return 0 == NameLength;
+    }
+    // （チェック）従業員氏名が20文字以下か
+    public boolean isOutOfRangeName(Employee employee) {
+        int NameLength = employee.getName().length();
+        return 20 < NameLength;
+    }
+
     // 従業員削除
     @Transactional
     public ErrorKinds delete(String code, UserDetail userDetail) {
@@ -135,17 +146,6 @@ public class EmployeeService {
         employee.setDeleteFlg(true);
 
         return ErrorKinds.SUCCESS;
-    }
-
-    // （チェック）従業員氏名が空欄か
-    public boolean isBlankName(Employee employee) {
-        int NameLength = employee.getName().length();
-        return 0 == NameLength;
-    }
-    // （チェック）従業員氏名が20文字以下か
-    public boolean isOutOfRangeName(Employee employee) {
-        int NameLength = employee.getName().length();
-        return 20 < NameLength;
     }
 
     // （チェック）従業員パスワード

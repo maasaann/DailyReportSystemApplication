@@ -72,19 +72,20 @@ public class ReportController {
             @AuthenticationPrincipal UserDetail userDetail,
             BindingResult res, Model model) {
 
+        // employeeCode を取得
         String EmpCode = userDetail.getEmployee().getCode();
+        // Employee を EmpCode でインスタンス化
         Employee employee = employeeService.findByCode(EmpCode);
+        // setEmployee
         report.setEmployee(employee);
 
+        // 現在の Report の総本数 +1 を取得する
         Integer ReportCounts = reportService.findAll().size() + 1;
+        // setId
         report.setId(ReportCounts);
-
+        
+        // save
         ErrorKinds result = reportService.save(report);
-
-//        // 入力チェック
-//        if (res.hasErrors()) {
-//            return r_create(report,userDetail,model);
-//        }
 
         if (ErrorMessage.contains(result)) {
 
