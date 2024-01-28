@@ -18,18 +18,20 @@ import com.techacademy.repository.ReportRepository;
 public class ReportService {
 
     private final ReportRepository reportRepository;
-    //private final EmployeeRepository employeeRepository;
 
     @Autowired
     public ReportService(
             ReportRepository reportRepository ) {
-            //,EmployeeRepository employeeRepository
         this.reportRepository = reportRepository;
-        //this.employeeRepository = employeeRepository;
     }
 
     // 日報一覧表示処理
     public List<Report> findAll() {
+        return reportRepository.findAll();
+    }
+
+    // aaa
+    public List<Report> findByEmployee(Employee employee) {
         return reportRepository.findAll();
     }
 
@@ -106,7 +108,7 @@ public class ReportService {
         LocalDate RD = report.getReportDate();
         return null == RD;
     }
-    
+
     // （チェック）日報 日付が重複か
     public boolean isDuplicateReportDate(Report report,Employee employee) {
 
@@ -156,4 +158,5 @@ public class ReportService {
 
         return ErrorKinds.SUCCESS;
     }
+
 }
