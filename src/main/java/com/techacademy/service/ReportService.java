@@ -29,7 +29,7 @@ public class ReportService {
     public List<Report> findAll() {
         return reportRepository.findAll();
     }
-    
+
     // findByEmployee
     public List<Report> findByEmployee(Employee employee) {
         List<Report> reportList = reportRepository.findByEmployee(employee);
@@ -64,11 +64,22 @@ public class ReportService {
     @Transactional
     public ErrorKinds r_update(String id, Report report, Employee employee) {
 
-        // 日報 日付 の 空欄 と 重複 チェック
-        if ( isBlankReportDate(report) ) {
-            return ErrorKinds.DATECHECK_BLANK_ERROR;
-        } else if ( isDuplicateReportDate(report,employee) ) {
-            return ErrorKinds.DATECHECK_ERROR;
+        // 現在の日報情報を取得
+        Report existingReport = findByCode(id);
+
+        LocalDate oldDate = existingReport.getReportDate();
+        LocalDate newDate = report.getReportDate();
+
+        // 更新日付に同じ日が入力されていたらスキップ
+        if ( !(oldDate.isEqual(newDate)) ) {
+
+            // 日報 日付 の 空欄 と 重複 チェック
+            if ( isBlankReportDate(report) ) {
+                return ErrorKinds.DATECHECK_BLANK_ERROR;
+            } else if ( isDuplicateReportDate(report,employee) ) {
+                return ErrorKinds.DATECHECK_ERROR;
+            }
+
         }
 
         // 日報 タイトル の 空欄 と 100文字以下 チェック
@@ -84,9 +95,6 @@ public class ReportService {
         } else if ( isOutOfRangeContent(report) ) {
             return ErrorKinds.RANGECHECK_ERROR_CONTENT;
         }
-
-        // 現在の日報情報を取得
-        Report existingReport = findByCode(id);
 
         // 更新後の日報情報を、現在の日報情報に上書き
         existingReport.setReportDate(report.getReportDate());

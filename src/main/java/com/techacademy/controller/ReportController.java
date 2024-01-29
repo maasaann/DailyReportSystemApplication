@@ -41,7 +41,6 @@ public class ReportController {
     public String list(@AuthenticationPrincipal UserDetail userDetail,Model model) {
 
         String role = userDetail.getEmployee().getRole().toString();
-        System.out.println(role);
 
         // ADMIN と GENERAL で処理を分ける
         if ( role == "ADMIN" ) {
@@ -86,10 +85,14 @@ public class ReportController {
     // 日報 新規登録処理
     @PostMapping(value = "/r-add")
     public String add(
-            @ModelAttribute Report report,
             @AuthenticationPrincipal UserDetail userDetail,
-            BindingResult res, Model model) {
-
+            @Validated Report report,BindingResult res, Model model) {
+        
+        // 入力チェック
+        if (res.hasErrors()) {
+            return r_create(report,userDetail,model);
+        }
+        
         // employeeCode を取得
         String EmpCode = userDetail.getEmployee().getCode();
         // Employee を EmpCode でインスタンス化
