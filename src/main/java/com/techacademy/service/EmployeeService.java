@@ -150,18 +150,23 @@ public class EmployeeService {
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
         employee.setDeleteFlg(true);
-        
+
         /* 削除対象の従業員に紐づいている日報情報の削除：ここから */
+
+        System.out.println(employee.getName());
 
         // 削除対象の従業員（employee）に紐づいている、日報のリスト（reportList）を取得
         List<Report> reportList = reportService.findByEmployee(employee);
-        
+
+        //System.out.println(Report.getcou);
+
         // 日報のリスト（reportList）を拡張for文を使って繰り返し
         for (Report report : reportList) {
             // 日報（report）のIDを指定して、日報情報を削除
+            System.out.println(report.getId());
             reportService.delete(report.getId().toString());
         }
-        
+
         /* 削除対象の従業員に紐づいている日報情報の削除：ここまで */
 
         return ErrorKinds.SUCCESS;

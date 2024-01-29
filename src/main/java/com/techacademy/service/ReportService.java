@@ -29,10 +29,24 @@ public class ReportService {
     public List<Report> findAll() {
         return reportRepository.findAll();
     }
-
-    // aaa
+    
+    // findByEmployee
     public List<Report> findByEmployee(Employee employee) {
-        return reportRepository.findAll();
+        List<Report> reportList = reportRepository.findByEmployee(employee);
+        return reportList;
+    }
+
+    // 日報 削除
+    @Transactional
+    public ErrorKinds delete(String id) {
+
+        Report report = findByCode(id);
+
+        LocalDateTime now = LocalDateTime.now();
+        report.setUpdatedAt(now);
+        report.setDeleteFlg(true);
+
+        return ErrorKinds.SUCCESS;
     }
 
     // 1件を検索
@@ -48,12 +62,34 @@ public class ReportService {
 
     // 日報 情報を更新
     @Transactional
-    public ErrorKinds r_update(String id,Report report) {
+    public ErrorKinds r_update(String id, Report report, Employee employee) {
+
+        // 日報 日付 の 空欄 と 重複 チェック
+        if ( isBlankReportDate(report) ) {
+            return ErrorKinds.DATECHECK_BLANK_ERROR;
+        } else if ( isDuplicateReportDate(report,employee) ) {
+            return ErrorKinds.DATECHECK_ERROR;
+        }
+
+        // 日報 タイトル の 空欄 と 100文字以下 チェック
+        if ( isBlankTitle(report) ) {
+            return ErrorKinds.BLANK_ERROR_TITLE;
+        } else if ( isOutOfRangeTitle(report) ) {
+            return ErrorKinds.RANGECHECK_ERROR_TITLE;
+        }
+
+        // 日報 内容 の 空欄 と 600文字以下 チェック
+        if ( isBlankContent(report) ) {
+            return ErrorKinds.BLANK_ERROR_CONTENT;
+        } else if ( isOutOfRangeContent(report) ) {
+            return ErrorKinds.RANGECHECK_ERROR_CONTENT;
+        }
 
         // 現在の日報情報を取得
         Report existingReport = findByCode(id);
 
         // 更新後の日報情報を、現在の日報情報に上書き
+        existingReport.setReportDate(report.getReportDate());
         existingReport.setTitle(report.getTitle());
         existingReport.setContent(report.getContent());
 
@@ -144,19 +180,4 @@ public class ReportService {
         int Length = report.getContent().length();
         return 600 < Length;
     }
-
-    // 日報 削除
-    @Transactional
-    public ErrorKinds delete(String id) {
-
-        Report report = findByCode(id);
-
-        LocalDateTime now = LocalDateTime.now();
-        report.setUpdatedAt(now);
-
-        report.setDeleteFlg(true);
-
-        return ErrorKinds.SUCCESS;
-    }
-
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Employee.Role;
 import com.techacademy.entity.Report;
 import com.techacademy.service.EmployeeService;
 import com.techacademy.service.ReportService;
@@ -37,11 +38,28 @@ public class ReportController {
 
     // 日報 一覧画面
     @GetMapping
-    public String list(Model model) {
+    public String list(@AuthenticationPrincipal UserDetail userDetail,Model model) {
 
-        model.addAttribute("listSize", reportService.findAll().size());
-        model.addAttribute("reportList", reportService.findAll());
+        String role = userDetail.getEmployee().getRole().toString();
+        System.out.println(role);
 
+        // ADMIN と GENERAL で処理を分ける
+        if ( role == "ADMIN" ) {
+            
+            // ADMIN なら全件表示
+            model.addAttribute("listSize", reportService.findAll().size());
+            model.addAttribute("reportList", reportService.findAll());
+            
+        } else {
+
+            // GENERAL なら自分のだけ
+            String EmpCode = userDetail.getEmployee().getCode();
+            Employee employee = employeeService.findByCode(EmpCode);
+            
+            model.addAttribute("listSize", reportService.findByEmployee(employee).size());
+            model.addAttribute("reportList", reportService.findByEmployee(employee));
+            
+        }
         return "reports/r-list";
     }
 
@@ -71,7 +89,7 @@ public class ReportController {
             @ModelAttribute Report report,
             @AuthenticationPrincipal UserDetail userDetail,
             BindingResult res, Model model) {
-        
+
         // employeeCode を取得
         String EmpCode = userDetail.getEmployee().getCode();
         // Employee を EmpCode でインスタンス化
@@ -133,9 +151,15 @@ public class ReportController {
     @PostMapping(value = "/{id}/r-update")
     public String r_update(
             @PathVariable String id,
-            @Validated Report report, BindingResult res, Model model) {
+            @Validated Report report,
+            @AuthenticationPrincipal UserDetail userDetail,BindingResult res, Model model) {
 
-        ErrorKinds result = reportService.r_update(id, report);
+        // employeeCode を取得
+        String EmpCode = userDetail.getEmployee().getCode();
+        // Employee を EmpCode でインスタンス化
+        Employee employee = employeeService.findByCode(EmpCode);
+
+        ErrorKinds result = reportService.r_update(id, report, employee);
 
         if (ErrorMessage.contains(result)) {
 
