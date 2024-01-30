@@ -26,14 +26,11 @@ import com.techacademy.service.UserDetail;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-    private final ReportService reportService;
 
     @Autowired
     public EmployeeController(
-            EmployeeService employeeService,
-            ReportService reportService) {
+            EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.reportService = reportService;
     }
 
     // 従業員 一覧画面

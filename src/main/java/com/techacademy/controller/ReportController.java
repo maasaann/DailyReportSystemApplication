@@ -155,7 +155,8 @@ public class ReportController {
     public String r_update(
             @PathVariable String id,
             @Validated Report report,
-            @AuthenticationPrincipal UserDetail userDetail,BindingResult res, Model model) {
+            @AuthenticationPrincipal UserDetail userDetail,
+            BindingResult res, Model model) {
 
         // employeeCode を取得
         String EmpCode = userDetail.getEmployee().getCode();
