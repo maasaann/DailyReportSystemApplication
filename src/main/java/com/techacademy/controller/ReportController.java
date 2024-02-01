@@ -36,6 +36,7 @@ public class ReportController {
         this.employeeService = employeeService;
     }
 
+
     // 日報 一覧画面
     @GetMapping
     public String list(@AuthenticationPrincipal UserDetail userDetail,Model model) {
