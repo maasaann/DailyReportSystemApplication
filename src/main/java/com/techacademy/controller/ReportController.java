@@ -44,23 +44,24 @@ public class ReportController {
 
         // ADMIN と GENERAL で処理を分ける
         if ( role == "ADMIN" ) {
-            
+
             // ADMIN なら全件表示
             model.addAttribute("listSize", reportService.findAll().size());
             model.addAttribute("reportList", reportService.findAll());
-            
+
         } else {
 
             // GENERAL なら自分のだけ
             String EmpCode = userDetail.getEmployee().getCode();
             Employee employee = employeeService.findByCode(EmpCode);
-            
+
             model.addAttribute("listSize", reportService.findByEmployee(employee).size());
             model.addAttribute("reportList", reportService.findByEmployee(employee));
-            
+
         }
         return "reports/r-list";
     }
+
 
     // 日報 詳細画面
     @GetMapping(value = "/{id}/")
@@ -87,12 +88,12 @@ public class ReportController {
     public String add(
             @AuthenticationPrincipal UserDetail userDetail,
             @Validated Report report,BindingResult res, Model model) {
-        
+
         // 入力チェック
         if (res.hasErrors()) {
             return r_create(report,userDetail,model);
         }
-        
+
         // employeeCode を取得
         String EmpCode = userDetail.getEmployee().getCode();
         // Employee を EmpCode でインスタンス化
