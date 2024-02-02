@@ -13,7 +13,7 @@
     <div class="container-fluid p-0">
         <h1 class="h3 mb-3">日報 更新</h1>
     </div>
-    <div class="col-12 col-xxl-6 navbar-nav-scroll">
+    <div class="col-12 col-xxl-6">
     <div class="col-xl-12">
     <div class="card">
     <div class="card-body">
@@ -26,6 +26,7 @@
                 <p class="mb-1"></p>
                 <div class="col-md-7">
                     <input class="form-control" type="date" th:field="*{reportDate}" th:errorclass="err" id="reportDate">
+                    
                     <span th:if="${reportDateBlankError} neq null" th:text="${reportDateBlankError}" class="text-danger"></span>
                     <span th:if="${reportDateError} neq null" th:text="${reportDateError}" class="text-danger"></span>
                 </div>
@@ -44,6 +45,7 @@
                 <p class="mb-1"></p>
                 <div class="col-md-7">
                     <input class="form-control" type="text" th:field="*{title}" th:errorclass="err" id="title">
+                    
                     <span th:if="${titleError} neq null" th:text="${titleError}" class="text-danger"></span>
                 </div>
             </div>
@@ -53,6 +55,7 @@
                 <p class="mb-1"></p>
                 <div class="col-md-7">
                     <textarea class="form-control" type="text" rows="5" th:field="*{content}" th:errorclass="err" id="content"></textarea>
+                    
                     <span th:if="${contentError} neq null" th:text="${contentError}" class="text-danger"></span>
                 </div>
             </div>
