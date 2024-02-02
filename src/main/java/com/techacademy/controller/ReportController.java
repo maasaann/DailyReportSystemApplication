@@ -36,7 +36,6 @@ public class ReportController {
         this.employeeService = employeeService;
     }
 
-
     // 日報 一覧画面
     @GetMapping
     public String list(@AuthenticationPrincipal UserDetail userDetail,Model model) {
@@ -62,7 +61,6 @@ public class ReportController {
         }
         return "reports/r-list";
     }
-
 
     // 日報 詳細画面
     @GetMapping(value = "/{id}/")
